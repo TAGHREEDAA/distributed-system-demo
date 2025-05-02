@@ -1,4 +1,5 @@
 import path from 'path';
+import { initDB } from './db';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 
@@ -13,25 +14,35 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     oneofs: true,
 });
 
-const grpcObject = grpc.loadPackageDefinition(packageDefinition);
+const grpcObject = grpc.loadPackageDefinition(packageDefinition) as any;
+const adderPackage = grpcObject.adder;
 
+async function main() {
+    const db = await initDB();
 
-const adderPackage: any = grpcObject.adder;
+    const server = new grpc.Server();
 
+    server.addService(adderPackage.AdderService.service, {
+        Add: async (call: any, callback: any) => {
+            const { a, b } = call.request;
+            const result = a + b;
 
-const server = new grpc.Server();
+            // تخزين الرسالة في جدول outbox
+            const payload = JSON.stringify({ result });
+            await db.run(`INSERT INTO outbox_messages (payload) VALUES (?)`, [payload]);
 
-server.addService(adderPackage.AdderService.service, {
-    Add: (call: any, callback: any) => {
-        const { a, b } = call.request;
-        const result = a + b;
-        callback(null, { result });
-    },
-});
+            console.log(`📦 Stored result ${result} in outbox`);
 
-const PORT = '0.0.0.0:50051';
+            // لسه هنرجع الناتج للـ client مؤقتًا كمان
+            callback(null, { result });
+        },
+    });
 
-server.bindAsync(PORT, grpc.ServerCredentials.createInsecure(), () => {
-    console.log(`🚀 gRPC Server running at ${PORT}`);
-    server.start();
-});
+    const PORT = '0.0.0.0:50051';
+    server.bindAsync(PORT, grpc.ServerCredentials.createInsecure(), () => {
+        console.log(`🚀 gRPC Server running at ${PORT}`);
+        server.start();
+    });
+}
+
+main();
