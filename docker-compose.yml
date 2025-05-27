@@ -19,5 +19,40 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9001:9000"
+    environment:
+      KAFKA_BROKER_CONNECT: kafka:9092
+    depends_on:
+      - kafka
+
+  outbox-worker:
+    build:
+      context: ./service-a-grpc
+      dockerfile: Dockerfile.worker
+    depends_on:
+      - kafka
+    volumes:
+      - ./service-a-grpc/outbox.db:/app/outbox.db
+    environment:
+      KAFKA_BROKER: kafka:9092
+
+  service-a-grpc:
+    build:
+      context: ./service-a-grpc
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"
+    depends_on:
+      - kafka
+    volumes:
+      - ./service-a-grpc/outbox.db:/app/outbox.db
+    environment:
+      KAFKA_BROKER: kafka:9092
+

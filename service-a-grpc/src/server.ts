@@ -25,6 +25,8 @@ async function main() {
     server.addService(adderPackage.AdderService.service, {
         Add: async (call: any, callback: any) => {
             const { a, b } = call.request;
+            console.log("✅ Received numbers", a, b);
+
             const result = a + b;
 
             // تخزين الرسالة في جدول outbox
@@ -33,7 +35,6 @@ async function main() {
 
             console.log(`📦 Stored result ${result} in outbox`);
 
-            // لسه هنرجع الناتج للـ client مؤقتًا كمان
             callback(null, { result });
         },
     });
