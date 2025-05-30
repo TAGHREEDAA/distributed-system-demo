@@ -1,4 +1,3 @@
-
 # 🛠️ Distributed System Educational Project
 
 > Learn how to build a production-like distributed system using **gRPC**, **REST**, **Kafka**, **Kubernetes**, and **Observability tools** like Prometheus, Grafana, and OpenTelemetry.
@@ -66,6 +65,15 @@ It aims to teach:
 ### Load Testing
 - [ ] Use K6 to simulate 1000+ users hitting gRPC and REST endpoints.
 - [ ] Observe logs and metrics under load.
+
+---
+
+## 🚦 Continuous Integration / Continuous Deployment (CI/CD)
+
+- [ ] إعداد CI لتشغيل اختبارات الوحدة (Unit Tests) على كل PR.
+- [ ] بناء صور Docker تلقائيًا عند كل push أو merge.
+- [ ] نشر تلقائي (Deployment) إلى Kubernetes Cluster (اختياري).
+- [ ] مراقبة حالة الخدمات بعد النشر.
 
 ---
 
