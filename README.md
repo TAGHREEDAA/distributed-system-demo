@@ -70,10 +70,10 @@ It aims to teach:
 
 ## 🚦 Continuous Integration / Continuous Deployment (CI/CD)
 
-- [ ] إعداد CI لتشغيل اختبارات الوحدة (Unit Tests) على كل PR.
-- [ ] بناء صور Docker تلقائيًا عند كل push أو merge.
-- [ ] نشر تلقائي (Deployment) إلى Kubernetes Cluster (اختياري).
-- [ ] مراقبة حالة الخدمات بعد النشر.
+- [ ] Setup CI to run unit tests on every PR.
+- [ ] Build Docker images automatically on push or merge.
+- [ ] (Optional) Deploy automatically to a Kubernetes Cluster.
+- [ ] Monitor service health after deployment.
 
 ---
 
