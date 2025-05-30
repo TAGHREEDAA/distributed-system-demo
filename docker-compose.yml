@@ -56,3 +56,28 @@ services:
     environment:
       KAFKA_BROKER: kafka:9092
 
+  service-b-rest:
+    build:
+      context: ./service-b-rest
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - kafka
+    volumes:
+      - ./service-b-rest/total.txt:/app/total.txt
+    environment:
+      KAFKA_BROKER: kafka:9092
+
+  service-b-consumer:
+    build:
+      context: ./service-b-rest
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    volumes:
+      - ./service-b-rest/total.txt:/app/total.txt
+    environment:
+      KAFKA_BROKER: kafka:9092
+    command: ["ts-node", "src/consumer.ts"]
+

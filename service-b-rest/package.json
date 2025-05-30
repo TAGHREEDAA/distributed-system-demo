@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "consumer": "ts-node src/consumer.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
     "kafkajs": "^2.2.4"
   },
   "devDependencies": {
-    "@types/express": "^5.0.2"
+    "@types/express": "^5.0.2",
+    "ts-node": "^10.9.2"
   }
 }

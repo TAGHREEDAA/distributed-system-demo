@@ -1,20 +1,11 @@
 import express from 'express';
-import fs from 'fs';
-import path from 'path';
+import { readTotal } from './storage';
 
 const app = express();
 const PORT = 3000;
 
-const filePath = path.join(__dirname, '../total.txt');
-
-app.get('/total', (req, res) => {
-  let total = 0;
-
-  if (fs.existsSync(filePath)) {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    total = parseInt(content || '0', 10);
-  }
-
+app.get('/total', async (req, res) => {
+  const total = await readTotal();
   res.json({ total });
 });
 
