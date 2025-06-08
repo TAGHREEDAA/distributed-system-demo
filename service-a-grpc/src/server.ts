@@ -40,9 +40,18 @@ async function main() {
     });
 
     const PORT = '0.0.0.0:50051';
-    server.bindAsync(PORT, grpc.ServerCredentials.createInsecure(), () => {
-        console.log(`🚀 gRPC Server running at ${PORT}`);
-    });
+    server.bindAsync(
+        PORT,
+        grpc.ServerCredentials.createInsecure(),
+        (err) => {
+            if (err) {
+                console.error('💥 Failed to bind gRPC server:', err);
+                return;
+            }
+            server.start();
+            console.log(`🚀 gRPC Server running at ${PORT}`);
+        }
+    );
 }
 
 main();
